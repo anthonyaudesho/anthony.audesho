@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Portfolio — Aspiring Engineer</title>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Instrument+Sans:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #f5f2ed;
+    --ink: #1a1916;
+    --muted: #7a7670;
+    --border: #ddd9d2;
+    --accent: #2a5c3f;
+    --accent-light: #e8f0eb;
+    --white: #ffffff;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'Instrument Sans', sans-serif;
+    background: var(--bg);
+    color: var(--ink);
+    line-height: 1.6;
+  }
+
+  /* NAV */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0;
+    z-index: 100;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 20px 48px;
+    background: rgba(245,242,237,0.85);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid transparent;
+    transition: border-color 0.3s;
+  }
+  nav.scrolled { border-color: var(--border); }
+  .nav-name {
+    font-family: 'Instrument Serif', serif;
+    font-size: 1.05rem;
+    letter-spacing: 0.01em;
+  }
+  .nav-links { display: flex; gap: 28px; align-items: center; }
+  .nav-links a {
+    text-decoration: none; color: var(--muted);
+    font-size: 0.85rem; transition: color 0.2s;
+  }
+  .nav-links a:hover { color: var(--ink); }
+  .nav-links .nav-cta {
+    color: var(--accent);
+    border: 1px solid var(--accent);
+    padding: 6px 16px;
+    border-radius: 20px;
+    font-size: 0.82rem;
+    transition: background 0.2s, color 0.2s;
+  }
+  .nav-links .nav-cta:hover { background: var(--accent); color: white; }
+
+  /* HERO */
+  .hero {
+    min-height: 100vh;
+    display: flex; flex-direction: column; justify-content: flex-end;
+    padding: 0 48px 72px;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero-bg-text {
+    position: absolute; top: 50%; left: 48px;
+    transform: translateY(-60%);
+    font-family: 'Instrument Serif', serif;
+    font-size: clamp(80px, 14vw, 200px);
+    color: rgba(42,92,63,0.06);
+    line-height: 1;
+    pointer-events: none;
+    white-space: nowrap;
+    user-select: none;
+  }
+  .hero-tag {
+    font-size: 0.72rem; letter-spacing: 0.16em; text-transform: uppercase;
+    color: var(--accent); margin-bottom: 20px;
+    display: flex; align-items: center; gap: 10px;
+  }
+  .hero-tag::before { content: ''; width: 32px; height: 1px; background: var(--accent); }
+  .hero-headline {
+    font-family: 'Instrument Serif', serif;
+    font-size: clamp(2.4rem, 6vw, 5.2rem);
+    line-height: 1.08;
+    font-weight: 400;
+    max-width: 800px;
+    margin-bottom: 32px;
+  }
+  .hero-headline em { font-style: italic; color: var(--accent); }
+  .hero-sub {
+    font-size: 1rem; color: var(--muted); max-width: 460px;
+    line-height: 1.7; margin-bottom: 40px;
+  }
+  .hero-actions { display: flex; gap: 16px; align-items: center; flex-wrap: wrap; }
+  .btn-primary {
+    background: var(--ink); color: var(--bg);
+    padding: 13px 28px; border-radius: 4px;
+    text-decoration: none; font-size: 0.88rem; font-weight: 500;
+    transition: background 0.2s;
+  }
+  .btn-primary:hover { background: var(--accent); }
+  .btn-ghost {
+    color: var(--muted); font-size: 0.88rem; text-decoration: none;
+    display: flex; align-items: center; gap: 6px;
+    transition: color 0.2s;
+  }
+  .btn-ghost:hover { color: var(--ink); }
+  .btn-ghost::after { content: '↓'; }
+  .hero-scroll {
+    position: absolute; right: 48px; bottom: 72px;
+    writing-mode: vertical-rl;
+    font-size: 0.7rem; letter-spacing: 0.14em; text-transform: uppercase;
+    color: var(--muted); display: flex; align-items: center; gap: 12px;
+  }
+  .hero-scroll::after { content: ''; width: 1px; height: 48px; background: var(--border); }
+
+  /* SECTION BASE */
+  section { padding: 96px 48px; }
+  .section-label {
+    font-size: 0.68rem; letter-spacing: 0.16em; text-transform: uppercase;
+    color: var(--muted); margin-bottom: 48px;
+    display: flex; align-items: center; gap: 12px;
+  }
+  .section-label::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+
+  /* ABOUT */
+  .about { background: var(--white); }
+  .about-grid {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 64px; align-items: start;
+    max-width: 1000px;
+  }
+  .about-headline {
+    font-family: 'Instrument Serif', serif;
+    font-size: clamp(1.8rem, 3.5vw, 2.8rem);
+    line-height: 1.2; font-weight: 400; margin-bottom: 24px;
+  }
+  .about-headline em { font-style: italic; color: var(--accent); }
+  .about-body { font-size: 0.95rem; color: var(--muted); line-height: 1.8; }
+  .about-body p + p { margin-top: 16px; }
+  .about-stats { display: flex; flex-direction: column; gap: 24px; padding-top: 8px; }
+  .stat-item { border-top: 1px solid var(--border); padding-top: 20px; }
+  .stat-num {
+    font-family: 'Instrument Serif', serif;
+    font-size: 2.4rem; color: var(--accent); line-height: 1;
+    margin-bottom: 4px;
+  }
+  .stat-label { font-size: 0.8rem; color: var(--muted); }
+
+  /* EXPERIENCE */
+  .experience { background: var(--bg); }
+  .exp-list { max-width: 720px; display: flex; flex-direction: column; gap: 0; }
+  .exp-item {
+    display: grid; grid-template-columns: 160px 1fr;
+    gap: 32px; padding: 32px 0;
+    border-top: 1px solid var(--border);
+    animation: fadeUp 0.5s ease both;
+  }
+  .exp-item:last-child { border-bottom: 1px solid var(--border); }
+  .exp-year { font-size: 0.8rem; color: var(--muted); padding-top: 4px; }
+  .exp-company {
+    font-family: 'Instrument Serif', serif;
+    font-size: 1.3rem; font-weight: 400; margin-bottom: 4px;
+  }
+  .exp-role { font-size: 0.82rem; color: var(--accent); font-weight: 500; margin-bottom: 10px; letter-spacing: 0.04em; }
+  .exp-desc { font-size: 0.88rem; color: var(--muted); line-height: 1.7; }
+
+  /* SKILLS */
+  .skills-section { background: var(--ink); color: var(--bg); }
+  .skills-section .section-label { color: rgba(245,242,237,0.4); }
+  .skills-section .section-label::after { background: rgba(245,242,237,0.12); }
+  .skills-grid {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1px; background: rgba(245,242,237,0.08);
+    border: 1px solid rgba(245,242,237,0.08);
+    border-radius: 8px; overflow: hidden;
+    max-width: 900px;
+  }
+  .skill-card {
+    background: var(--ink);
+    padding: 32px 28px;
+    transition: background 0.2s;
+  }
+  .skill-card:hover { background: var(--accent); }
+  .skill-icon { font-size: 1.4rem; margin-bottom: 14px; }
+  .skill-name { font-size: 0.95rem; font-weight: 500; margin-bottom: 6px; }
+  .skill-desc { font-size: 0.78rem; color: rgba(245,242,237,0.5); line-height: 1.5; }
+
+  /* CERTIFICATIONS */
+  .certs-section { background: var(--white); }
+  .cert-list { display: flex; flex-wrap: wrap; gap: 12px; max-width: 720px; }
+  .cert-tag {
+    background: var(--accent-light); color: var(--accent);
+    padding: 8px 18px; border-radius: 24px;
+    font-size: 0.82rem; font-weight: 500;
+    border: 1px solid rgba(42,92,63,0.2);
+  }
+
+  /* EDUCATION */
+  .education { background: var(--bg); }
+  .edu-card {
+    max-width: 600px;
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 36px 40px;
+  }
+  .edu-school {
+    font-family: 'Instrument Serif', serif;
+    font-size: 1.6rem; font-weight: 400; margin-bottom: 6px;
+  }
+  .edu-detail { font-size: 0.88rem; color: var(--muted); margin-bottom: 20px; }
+  .edu-badges { display: flex; gap: 10px; flex-wrap: wrap; }
+  .edu-badge {
+    background: var(--bg); border: 1px solid var(--border);
+    padding: 5px 14px; border-radius: 4px;
+    font-size: 0.78rem; color: var(--muted);
+  }
+
+  /* CONTACT */
+  .contact-section {
+    background: var(--accent);
+    color: white;
+    text-align: center;
+    padding: 96px 48px;
+  }
+  .contact-section .section-label { color: rgba(255,255,255,0.5); justify-content: center; }
+  .contact-section .section-label::after, .contact-section .section-label::before { background: rgba(255,255,255,0.2); content: ''; flex: 1; height: 1px; }
+  .contact-headline {
+    font-family: 'Instrument Serif', serif;
+    font-size: clamp(2rem, 5vw, 3.8rem);
+    font-weight: 400; line-height: 1.15;
+    margin-bottom: 20px; color: white;
+  }
+  .contact-sub { font-size: 1rem; color: rgba(255,255,255,0.7); margin-bottom: 40px; }
+  .contact-email {
+    display: inline-block;
+    font-size: 1.1rem; font-weight: 500;
+    color: white; text-decoration: none;
+    border-bottom: 1px solid rgba(255,255,255,0.4);
+    padding-bottom: 4px;
+    transition: border-color 0.2s;
+  }
+  .contact-email:hover { border-color: white; }
+  .contact-phone { margin-top: 12px; font-size: 0.9rem; color: rgba(255,255,255,0.6); }
+
+  /* FOOTER */
+  footer {
+    background: var(--ink); color: rgba(245,242,237,0.4);
+    padding: 28px 48px;
+    display: flex; justify-content: space-between; align-items: center;
+    font-size: 0.78rem; flex-wrap: wrap; gap: 12px;
+  }
+  footer a { color: rgba(245,242,237,0.4); text-decoration: none; }
+  footer a:hover { color: var(--bg); }
+
+  /* ANIMATIONS */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .hero-tag { animation: fadeUp 0.6s 0.1s ease both; }
+  .hero-headline { animation: fadeUp 0.6s 0.2s ease both; }
+  .hero-sub { animation: fadeUp 0.6s 0.3s ease both; }
+  .hero-actions { animation: fadeUp 0.6s 0.4s ease both; }
+
+  /* MOBILE */
+  @media (max-width: 700px) {
+    nav { padding: 16px 20px; }
+    .nav-links a:not(.nav-cta) { display: none; }
+    section { padding: 64px 20px; }
+    .hero { padding: 0 20px 56px; }
+    .hero-scroll { display: none; }
+    .about-grid { grid-template-columns: 1fr; gap: 40px; }
+    .exp-item { grid-template-columns: 1fr; gap: 6px; }
+    footer { padding: 20px; flex-direction: column; align-items: flex-start; }
+    .contact-section { padding: 64px 20px; }
+  }
+</style>
+</head>
+<body>
+
+<nav id="nav">
+  <div class="nav-name">Aspiring Engineer</div>
+  <div class="nav-links">
+    <a href="#experience">Experience</a>
+    <a href="#skills">Skills</a>
+    <a href="#education">Education</a>
+    <a href="resume.docx" download class="nav-cta">↓ Resume</a>
+    <a href="#contact" class="nav-cta">Get in touch</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-bg-text">Engineer</div>
+  <div class="hero-tag">Craigieburn, VIC · Open to opportunities</div>
+  <h1 class="hero-headline">
+    Building the <em>future</em><br>one structure at a time.
+  </h1>
+  <p class="hero-sub">
+    Year 9 student at Hume Anglican Grammar with a passion for engineering. Work experience at Arup — one of the world's leading engineering firms. Safe@Work certified across construction, electrical, metals and more.
+  </p>
+  <div class="hero-actions">
+    <a href="#experience" class="btn-primary">View my experience</a>
+    <a href="resume.docx" download class="btn-ghost" style="text-decoration:none;">↓ Download resume</a>
+  </div>
+  <div class="hero-scroll">Scroll</div>
+</section>
+
+<!-- ABOUT -->
+<section class="about" id="about">
+  <div class="section-label">About me</div>
+  <div class="about-grid">
+    <div>
+      <h2 class="about-headline">
+        A driven student with <em>real-world</em> engineering experience.
+      </h2>
+      <div class="about-body">
+        <p>I'm a Year 10 student at Hume Anglican Grammar in Craigieburn, Victoria, with a genuine passion for engineering and building things that last.</p>
+        <p>I've been fortunate to gain hands-on work experience at Arup — a globally recognised engineering and consulting firm — which gave me early exposure to what professional engineering looks like in practice.</p>
+        <p>Outside of school I've developed strong communication and teamwork skills through customer service in my family business, and leadership experience as a school senator. I hold multiple Safe@Work certifications across construction, electrical, metals, and engineering.</p>
+      </div>
+    </div>
+    <div class="about-stats">
+      <div class="stat-item">
+        <div class="stat-num">Arup</div>
+        <div class="stat-label">Work experience — global engineering firm</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num">5+</div>
+        <div class="stat-label">Safe@Work certifications across engineering fields</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num">2022–</div>
+        <div class="stat-label">Years of real-world customer service and business experience</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- EXPERIENCE -->
+<section class="experience" id="experience">
+  <div class="section-label">Experience</div>
+  <div class="exp-list">
+
+    <div class="exp-item">
+      <div class="exp-year">2024</div>
+      <div>
+        <div class="exp-company">Arup</div>
+        <div class="exp-role">Work Experience — Engineering</div>
+        <div class="exp-desc">Completed work experience at Arup, one of the world's most respected engineering and consulting firms. Gained exposure to professional engineering practice, real-world project environments, and the multidisciplinary teamwork that defines large-scale infrastructure and building projects.</div>
+      </div>
+    </div>
+
+    <div class="exp-item">
+      <div class="exp-year">2023–Present</div>
+      <div>
+        <div class="exp-company">Hume Anglican Grammar</div>
+        <div class="exp-role">School Senator</div>
+        <div class="exp-desc">Elected as a school senator, representing students and assisting with school events. Developed leadership, communication, and organisational skills through active participation in school governance and community activities.</div>
+      </div>
+    </div>
+
+    <div class="exp-item">
+      <div class="exp-year">2022–2024</div>
+      <div>
+        <div class="exp-company">Family Business</div>
+        <div class="exp-role">Customer Service</div>
+        <div class="exp-desc">Worked in the family business providing customer service over two years. Gained practical experience in communication, problem solving, time management, and working effectively as part of a team in a fast-paced environment.</div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- SKILLS -->
+<section class="skills-section" id="skills">
+  <div class="section-label">Skills</div>
+  <div class="skills-grid">
+    <div class="skill-card">
+      <div class="skill-icon">🏗</div>
+      <div class="skill-name">Engineering interest</div>
+      <div class="skill-desc">Passionate about structural, civil and building engineering with real-world exposure via Arup.</div>
+    </div>
+    <div class="skill-card">
+      <div class="skill-icon">🤝</div>
+      <div class="skill-name">Teamwork</div>
+      <div class="skill-desc">Experienced in collaborative environments — from school projects to professional work settings.</div>
+    </div>
+    <div class="skill-card">
+      <div class="skill-icon">💬</div>
+      <div class="skill-name">Communication</div>
+      <div class="skill-desc">Strong verbal and written communication developed through customer service and school leadership.</div>
+    </div>
+    <div class="skill-card">
+      <div class="skill-icon">⏱</div>
+      <div class="skill-name">Time management</div>
+      <div class="skill-desc">Balances school, work, and extracurriculars — consistently delivers on responsibilities and deadlines.</div>
+    </div>
+    <div class="skill-card">
+      <div class="skill-icon">📐</div>
+      <div class="skill-name">Willingness to learn</div>
+      <div class="skill-desc">Proactive attitude toward learning new skills and taking on challenges in any environment.</div>
+    </div>
+    <div class="skill-card">
+      <div class="skill-icon">🔩</div>
+      <div class="skill-name">Safety awareness</div>
+      <div class="skill-desc">Certified across 5 Safe@Work modules including construction, electrical, metals and engineering.</div>
+    </div>
+  </div>
+</section>
+
+<!-- CERTIFICATIONS -->
+<section class="certs-section" id="certifications">
+  <div class="section-label">Certifications</div>
+  <div class="cert-list">
+    <span class="cert-tag">✓ Safe@Work — General</span>
+    <span class="cert-tag">✓ Safe@Work — Building & Construction</span>
+    <span class="cert-tag">✓ Safe@Work — Electrical & Electronics</span>
+    <span class="cert-tag">✓ Safe@Work — Metals & Engineering</span>
+    <span class="cert-tag">✓ Safe@Work — Office & Business Services</span>
+  </div>
+</section>
+
+<!-- EDUCATION -->
+<section class="education" id="education">
+  <div class="section-label">Education</div>
+  <div class="edu-card">
+    <div class="edu-school">Hume Anglican Grammar</div>
+    <div class="edu-detail">Craigieburn, VIC · Year 10 — Currently Enrolled</div>
+    <div class="edu-badges">
+      <span class="edu-badge">Engineering pathway</span>
+      <span class="edu-badge">School Senator</span>
+      <span class="edu-badge">Craigieburn, VIC</span>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section class="contact-section" id="contact">
+  <div class="section-label">Get in touch</div>
+  <h2 class="contact-headline">Let's build something<br>great together.</h2>
+  <p class="contact-sub">Open to work experience, part-time roles, and engineering opportunities.</p>
+  <a href="mailto:6694@humegrammar.vic.edu.au" class="contact-email">6694@humegrammar.vic.edu.au</a>
+  <div class="contact-phone">0432 407 194</div>
+</section>
+
+<footer>
+  <span>© 2026 · Aspiring Engineer · Craigieburn, VIC</span>
+  <span>Built with ambition.</span>
+</footer>
+
+<script>
+  const nav = document.getElementById('nav');
+  window.addEventListener('scroll', () => {
+    nav.classList.toggle('scrolled', window.scrollY > 40);
+  });
+</script>
+</body>
+</html>
